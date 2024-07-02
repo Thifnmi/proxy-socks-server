@@ -23,7 +23,8 @@ COPY . .
 RUN go build -o /bin/proxy-socks-server ./main.go
 
 # Stage 4
-FROM golang:1.18.3 AS proxy-socks-server
+# FROM golang:1.18.3 AS proxy-socks-server
+FROM debian AS proxy-socks-server
 
 ENV TZ 'Asia/Ho_Chi_Minh'
 RUN echo $TZ > /etc/timezone && \
@@ -33,7 +34,7 @@ RUN echo $TZ > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata && \
     apt-get clean
 
-EXPOSE 8088
+EXPOSE 1080
 
 COPY --from=server_builder /bin/proxy-socks-server /bin/proxy-socks-server
 
