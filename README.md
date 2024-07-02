@@ -87,3 +87,9 @@ iptables -A INPUT -p tcp --dport 1080 -j DROP
 
 iptables -D INPUT <line-of-rule-number-in-chain>
 ```
+
+If run images builded by Dockerfile with normal command, rule iptables is not working because the hosts of container is different with hosts of VM. To fix it, run image with command:
+
+```/bin/bash
+docker run -dp <expose-port>:<container-port> --network host --name <your-container-name> <your-images-id>
+```
