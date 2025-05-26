@@ -8,7 +8,7 @@ FROM build_base AS build_go
 
 ENV GO111MODULE=on
 
-WORKDIR $GOPATH/proxy-socks-server
+WORKDIR $GOPATH/proxy-socks5-auth
 COPY go.mod .
 COPY go.sum .
 RUN go mod download
@@ -19,12 +19,12 @@ FROM build_go AS server_builder
 ENV GO111MODULE=on
 
 COPY . .
-# RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o /bin/proxy-socks-server ./main.go
-RUN go build -o /bin/proxy-socks-server ./main.go
+# RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o /bin/proxy-socks5-auth ./main.go
+RUN GOOS=linux GOARCH=amd64 go build -o /bin/proxy-socks5-auth ./main.go
 
 # Stage 4
-# FROM golang:1.18.3 AS proxy-socks-server
-FROM debian AS proxy-socks-server
+# FROM golang:1.18.3 AS proxy-socks5-auth
+FROM debian AS proxy-socks5-auth
 
 ENV TZ 'Asia/Ho_Chi_Minh'
 RUN echo $TZ > /etc/timezone && \
@@ -34,12 +34,12 @@ RUN echo $TZ > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata && \
     apt-get clean
 
-EXPOSE 1080
+EXPOSE 1081
 
-COPY --from=server_builder /bin/proxy-socks-server /bin/proxy-socks-server
+COPY --from=server_builder /bin/proxy-socks5-auth /bin/proxy-socks5-auth
 
 
-CMD ["/bin/proxy-socks-server"]
+CMD ["/bin/proxy-socks5-auth"]
 
 
 

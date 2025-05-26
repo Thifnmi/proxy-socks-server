@@ -2,13 +2,16 @@ package utils
 
 import (
 	"context"
+	"github.com/thifnmi/proxy-socks-server/server/auth"
 	"net"
 	"time"
 )
 
 type Config struct {
-	Resolv Resolver
-	Dial   func(ctx context.Context, network, addr string) (net.Conn, error)
+	AuthMethods []auth.Authenticator
+	Credentials auth.CredentialStore
+	Resolv      Resolver
+	Dial        func(ctx context.Context, network, addr string) (net.Conn, error)
 }
 
 type Resolver interface {
