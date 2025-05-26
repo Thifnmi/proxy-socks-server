@@ -40,6 +40,7 @@ const (
 	ipv4       addrType = 1
 	domainname addrType = 3
 	ipv6       addrType = 4
+	bufio      addrType = 187
 )
 
 type resultCode byte
@@ -79,16 +80,15 @@ func newClient(conn net.Conn) *client {
 }
 
 func (c *client) handle() error {
-	err := handleHandshake(c.conn)
-	if err != nil {
-		c.conn.Write([]byte{socksServerVersion, noAcceptableMethod})
-		return err
-	}
-	_, err = c.conn.Write([]byte{socksServerVersion, noAuthMethodRequired})
-	if err != nil {
-		return fmt.Errorf("could not reply to the handshake")
-	}
-
+	// err := handleHandshake(c.conn)
+	// if err != nil {
+	// 	c.conn.Write([]byte{socksServerVersion, noAcceptableMethod})
+	// 	return err
+	// }
+	// _, err = c.conn.Write([]byte{socksServerVersion, noAuthMethodRequired})
+	// if err != nil {
+	// 	return fmt.Errorf("could not reply to the handshake")
+	// }
 	req, err := ParseRequest(c.conn)
 	if err != nil {
 		c.sendFailure(generalSocksFailure)
